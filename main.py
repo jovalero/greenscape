@@ -1,5 +1,11 @@
-import modelo
-    
+from modelo import Cuidado,Jardinero,Planta,Proyecto,Tarea
+from basededatos.conexion import Conexion
+
+base_datos="basededatos/greenscape.db"
+conexion=Conexion(base_datos)
+
+conexion.crear_base()
+conexion.cerrar_conexion
 jardineros = []
 proyectos = []
 tareas = []
@@ -27,7 +33,7 @@ def crear_proyecto():
     id_proyecto = int(input("ID del Proyecto: "))
     nombre = input("Nombre del Proyecto: ")
     descripcion = input("Descripción del Proyecto: ")
-    proyecto = ProyectoJardineria(id_proyecto, nombre, descripcion)
+    proyecto = Proyecto(id_proyecto, nombre, descripcion)
     proyectos.append(proyecto)
     print(f"Proyecto {nombre} creado con éxito.\n")
 
