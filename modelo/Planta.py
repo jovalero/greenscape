@@ -1,9 +1,19 @@
 class Planta:
-    def __init__(self, id_planta, nombre, tipo, cuidados):
+    def __init__(self, id_planta, nombre, especie, requiere_cuidado,id_proyecto):
         self._id_planta = id_planta
         self._nombre = nombre
-        self._tipo = tipo
-        self._cuidados = cuidados
+        self._especie = especie
+        self._requiere_cuidado = requiere_cuidado
+        self._id_proyecto=id_proyecto
+        
+
+    @property
+    def id_proyecto(self):
+        return self._id_proyecto
+    
+    @id_proyecto.setter
+    def id_proyecto(self,id_proyecto):
+        self._id_proyecto=id_proyecto
 
     @property
     def id_planta(self):
@@ -23,27 +33,24 @@ class Planta:
 
 
     @property
-    def tipo(self):
-        return self._tipo
+    def especie(self):
+        return self._especie
 
-    @tipo.setter
-    def tipo(self, tipo):
-        self._tipo = tipo
+    @especie.setter
+    def especie(self, especie):
+        self._especie = especie
 
  
     @property
-    def cuidados(self):
-        return self._cuidados
+    def requiere_cuidado(self):
+        return self._requiere_cuidado
 
-    @cuidados.setter
-    def cuidados(self, cuidados):
-        if isinstance(cuidados, list):
-            self._cuidados = cuidados
-        else:
-            raise ValueError("Cuidados debe ser una lista")
+    @requiere_cuidado.setter
+    def requiere_cuidado(self, requiere_cuidado):
+        self._requiere_cuidado = requiere_cuidado
 
     def agregar_cuidado(self, cuidado):
-        self._cuidados.append(cuidado)
+        self._requiere_cuidado.append(cuidado)
 
     def __str__(self):
-        return f"ID: {self.id_planta}, Nombre: {self.nombre}, Tipo: {self.tipo}, Cuidados: {self.cuidados}"
+        return f"ID: {self.id_planta}, Nombre: {self.nombre}, especie: {self.especie}, requiere_cuidado: {self.requiere_cuidado}"

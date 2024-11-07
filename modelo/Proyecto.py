@@ -1,10 +1,10 @@
 class Proyecto:
-    def __init__(self, id_proyecto, nombre, descripcion):
+    def __init__(self, id_proyecto, nombre, descripcion,fecha_inicio,fecha_final):
         self._id_proyecto = id_proyecto
         self._nombre = nombre
         self._descripcion = descripcion
-        self._tareas = []
-        self._registro_actividades = []
+        self._fecha_inicio = fecha_inicio
+        self._fecha_final = fecha_final
 
    
     @property
@@ -33,31 +33,25 @@ class Proyecto:
 
    
     @property
-    def tareas(self):
-        return self._tareas
+    def fecha_inicio(self):
+        return self._fecha_inicio
 
-    @tareas.setter
-    def tareas(self, tareas):
-        if isinstance(tareas, list):
-            self._tareas = tareas
-        else:
-            raise ValueError("Tareas debe ser una lista")
+    @fecha_inicio.setter
+    def fecha_inicio(self, fecha_inicio):
+        self._fecha_inicio = fecha_inicio
 
    
     @property
-    def registro_actividades(self):
-        return self._registro_actividades
+    def fecha_final(self):
+        return self._fecha_final
 
-    @registro_actividades.setter
-    def registro_actividades(self, actividades):
-        if isinstance(actividades, list):
-            self._registro_actividades = actividades
-        else:
-            raise ValueError("Registro de actividades debe ser una lista")
+    @fecha_final.setter
+    def fecha_final(self, fecha_final):
+        self._fecha_final = fecha_final
 
    
     def registrar_actividad(self, actividad):
-        self._registro_actividades.append(actividad)
+        self._fecha_final.append(actividad)
 
     def __str__(self):
-        return f"ID: {self.id_proyecto}, Nombre: {self.nombre}, Descripción: {self.descripcion}, Tareas: {self.tareas}, Registro de Actividades: {self.registro_actividades}"
+        return f"ID: {self.id_proyecto}, Nombre: {self.nombre}, Descripción: {self.descripcion}, fecha_inicio: {self.fecha_inicio}, Registro de fecha_final: {self.fecha_final}"

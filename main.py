@@ -1,4 +1,4 @@
-from modelo import Cuidado,Jardinero,Planta,Proyecto,Tarea
+from modelo import Cuidado,Planta,Proyecto,Tarea, Usuario
 from basededatos.conexion import Conexion
 
 base_datos="basededatos/greenscape.db"
@@ -25,7 +25,7 @@ def crear_jardinero():
     id_jardinero = int(input("ID del Jardinero: "))
     nombre = input("Nombre del Jardinero: ")
     experiencia = input("Experiencia del Jardinero: ")
-    jardinero = Jardinero(id_jardinero, nombre, experiencia)
+    jardinero = Usuario(id_jardinero, nombre, experiencia)
     jardineros.append(jardinero)
     print(f"Jardinero {nombre} creado con éxito.\n")
 

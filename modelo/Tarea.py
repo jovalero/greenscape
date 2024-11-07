@@ -1,11 +1,20 @@
 class Tarea:
-    def __init__(self, id_tarea, descripcion, estado, fecha_inicio, fecha_fin):
+    def __init__(self, id_tarea, descripcion, estado, fecha_inicio, fecha_fin,id_proyecto):
         self._id_tarea = id_tarea
         self._descripcion = descripcion
         self._estado = estado
         self._fecha_inicio = fecha_inicio
         self._fecha_fin = fecha_fin
+        self._id_proyecto=id_proyecto
+        
 
+    @property
+    def id_proyecto(self):
+        return self._id_proyecto
+    
+    @id_proyecto.setter
+    def id_proyecto(self,id_proyecto):
+        self._id_proyecto=id_proyecto
    
     @property
     def id_tarea(self):
