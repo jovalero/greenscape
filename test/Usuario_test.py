@@ -7,11 +7,12 @@ from basededatos.conexion import Conexion
 class TestUsuario(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.conexion = Conexion("../basededatos/greenscape.db")
+        base_de_datos="basededatos/greenscape.db"
+        cls.conexion = Conexion(base_de_datos)
+        cls.conexion.crear_base()
     
     def test_crear_proyecto(self):
-        global conexion
-        proyecto= Proyecto(1,"Jardin de paco","Podar plantas todo el tiempo",datetime(2024,11,4).date(),datetime(2024,12,31).date())
+        proyecto= Proyecto(1,"Jardin de paco","Podar plantas todo el tiempo",datetime(2024,11,7).date(),datetime(2024,12,31).date())
         self.assertTrue(Usuario.crear_proyecto(proyecto, self.conexion))
 
     def test_proyecto_none(self):
@@ -41,7 +42,7 @@ class TestUsuario(unittest.TestCase):
     def test_fecha_inicio_antes_de_hoy(self):
 
         fecha_hoy = datetime.today().date()
-        fecha_inicio_pasada = fecha_hoy - timedelta(days=1)  # Un día antes de hoy
+        fecha_inicio_pasada = fecha_hoy - timedelta(days=1)  
         proyecto = Proyecto(1, "Nombre válido", "Descripción válida", fecha_inicio_pasada, fecha_hoy)
         resultado = Usuario.crear_proyecto(proyecto, self.conexion)
         self.assertFalse(resultado)

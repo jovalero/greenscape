@@ -57,12 +57,13 @@ class Usuario:
     def __str__(self):
         return f"ID: {self.id_usuario}, Nombre: {self.nombre}, password: {self.password}, email: {self.email}, tipo de usuario: {self.tipo_usuario}"
 
-    def crear_proyecto(proyecto : Proyecto,conexion : Conexion):
-        flag=False
-        if  proyecto!=None :
-            if proyecto.descripcion.strip() or proyecto.nombre.strip() or isinstance(proyecto.fecha_final, (datetime,date)) or isinstance(proyecto.fecha_inicio, (datetime,date)) or proyecto.fecha_inicio >= datetime.now(): 
-                conexion.insertar_proyecto(proyecto.nombre(),proyecto.descripcion(),proyecto.fecha_inicio(),proyecto.fecha_final())
-                flag=True                
+    def crear_proyecto(proyecto: Proyecto, conexion: Conexion):
+        flag = False
+        if proyecto is not None:
+            if proyecto.descripcion.strip() and proyecto.nombre.strip():
+                if isinstance(proyecto.fecha_inicio, (datetime, date)) and isinstance(proyecto.fecha_final, (datetime, date)):
+                    if proyecto.fecha_inicio >= datetime.now().date() and proyecto.fecha_inicio <= proyecto.fecha_final:  
+                        conexion.insertar_proyecto(proyecto.nombre, proyecto.descripcion, proyecto.fecha_inicio, proyecto.fecha_final)
+                        flag = True
         return flag
-
-    
+        

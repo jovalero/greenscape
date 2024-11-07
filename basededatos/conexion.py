@@ -3,7 +3,7 @@ import sqlite3
 class Conexion:
     def __init__(self,nombre):
         self.nombre_bd=nombre
-        self.conexion=sqlite3.connect(self.nombre)
+        self.conexion=sqlite3.connect(self.nombre_bd)
         self.cursor=self.conexion.cursor()
     
     def crear_tabla_proyecto(self):
@@ -41,8 +41,16 @@ class Conexion:
     ##CRUD PROYECTO
 
     def crear_planta(self):
-        self.cursor.execute("CREATE TABLE IF NOT EXISTS planta(id_planta INTEGER PRIMARY KEY, especie TEXT, id_proyecto INTEGER, requiere_cuidado BOOLEAN, FOREING KEY (id_proyecto) REFERENCES proyecto(id_proyecto))")
-        self.conexion.commit()    
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS planta(
+                id_planta INTEGER PRIMARY KEY, 
+                especie TEXT, 
+                id_proyecto INTEGER, 
+                requiere_cuidado BOOLEAN, 
+                FOREIGN KEY (id_proyecto) REFERENCES proyecto(id)
+            )
+        """)
+        self.conexion.commit()
     
     ##CRUD PLANTA
 
@@ -74,7 +82,16 @@ class Conexion:
 
 
     def crear_cuidado(self):
-        self.cursor.execute("CREATE TABLE IF NOT EXISTS cuidado(id_cuidado INTEGER PRIMARY KEY, descripcion TEXT, id_planta INTEGER, fecha DATE, tipo_cuidado TEXT, FOREING KEY (id_planta) REFERENCES planta(id_planta))")
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS cuidado(
+                id_cuidado INTEGER PRIMARY KEY, 
+                descripcion TEXT, 
+                id_planta INTEGER, 
+                fecha DATE, 
+                tipo_cuidado TEXT, 
+                FOREIGN KEY (id_planta) REFERENCES planta(id_planta)
+            )
+        """)        
         self.conexion.commit()    
 
     ##CRUD CUIDADO
@@ -107,7 +124,17 @@ class Conexion:
     ##CRUD CUIDADO
 
     def crear_tarea(self):
-        self.cursor.execute("CREATE TABLE IF NOT EXISTS tarea(id_tarea INTEGER PRIMARY KEY, estado TEXT, id_proyecto INTEGER, fecha_inicio DATE, fecha_venc DATE, descripcion TEXT, FOREING KEY (id_proyecto) REFERENCES proyecto(id_proyecto))")
+        self.cursor.execute("""
+            CREATE TABLE IF NOT EXISTS tarea(
+                id_tarea INTEGER PRIMARY KEY, 
+                estado TEXT, 
+                id_proyecto INTEGER, 
+                fecha_inicio DATE, 
+                fecha_venc DATE, 
+                descripcion TEXT, 
+                FOREIGN KEY (id_proyecto) REFERENCES proyecto(id_proyecto)
+            )
+        """)        
         self.conexion.commit()       
     
     ##CRUD TAREA
