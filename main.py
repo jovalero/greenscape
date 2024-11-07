@@ -1,23 +1,24 @@
-from flask import Flask, render_template, request, redirect, url_for,session
+from flask import Flask, render_template, request, redirect, url_for, session
 from basededatos.conexion import Conexion
 from modelo.Usuario import Usuario
 from modelo.Proyecto import Proyecto
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = 'una_clave_secreta_unica_y_segura'
+app.secret_key = 'una_clave_secreta_unica_y_segura'  # Asegúrate de que sea una clave larga y segura
+
+usuarios = {
+    'usuario1': 'password123',
+    'usuario2': 'securepass456'
+}
 
 @app.route('/', methods=['GET', 'POST'])
+def home():
+    session.clear()
+    return redirect(url_for('index'))
+@app.route('/login', methods=['GET', 'POST'])
 def index():
-    usuario_s = session.get('usuario', {})
-    if usuario_s:
-        tipo_usuario_s = usuario_s.get('tipo_usuario')
-        if tipo_usuario_s == 'Jardinero':
-            return render_template('MenuJardinero.html', usuario=usuario_s)
-        elif tipo_usuario_s == 'Administrador':
-            return render_template('MenuAdmin.html', usuario=usuario_s)
     
-
     base_de_datos = ".venv/basededatos/greenscape.db"
     conexion = Conexion(base_de_datos)
     conexion.crear_base()
@@ -37,15 +38,31 @@ def index():
                 # Redirigir al menú adecuado según el tipo de usuario
                 if tipo_usuario == "Jardinero":
                     conexion.cerrar_conexion()
-                    return render_template('MenuJardinero.html', usuario=usuario_obj)
+                    return redirect(url_for('menu_jardinero'))
                 else:
                     conexion.cerrar_conexion()
-                    return render_template('MenuAdmin.html', usuario=usuario_obj)
+                    return redirect(url_for('menu_admin'))
         
         conexion.cerrar_conexion()
         return render_template('index.html', mensaje="Credenciales Invalidas")
 
     return render_template('index.html', mensaje="")
+
+@app.route('/menu_jardinero')
+def menu_jardinero():
+    # Verificar si la sesión está activa antes de mostrar el menú
+    if 'usuario' not in session:
+        return redirect(url_for('index'))
+    usuario = session['usuario']
+    return render_template('MenuJardinero.html', usuario=usuario)
+
+@app.route('/menu_admin')
+def menu_admin():
+    # Verificar si la sesión está activa antes de mostrar el menú
+    if 'usuario' not in session:
+        return redirect(url_for('index'))
+    usuario = session['usuario']
+    return render_template('MenuAdmin.html', usuario=usuario)
 
 @app.route('/crearproyecto', methods=['GET', 'POST'])
 def crear_proyecto():
@@ -86,3 +103,6 @@ def resultado():
     resultado = session['resultado']
     session.pop('resultado', None)  # Limpiar el resultado de la sesión para no mantenerlo
     return render_template('resultado.html', resultado=resultado)
+
+if __name__ == '__main__':
+    app.run(debug=True)
