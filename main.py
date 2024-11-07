@@ -19,7 +19,7 @@ def home():
 @app.route('/login', methods=['GET', 'POST'])
 def index():
     
-    base_de_datos = ".venv/basededatos/greenscape.db"
+    base_de_datos = "basededatos/greenscape.db"
     conexion = Conexion(base_de_datos)
     conexion.crear_base()
     usuarios = conexion.mostrar_usuarios()
