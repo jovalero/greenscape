@@ -70,7 +70,7 @@ def crear_proyecto():
     if not usuario:
         return redirect(url_for('index'))
 
-    base_de_datos = ".venv/basededatos/greenscape.db"
+    base_de_datos = "basededatos/greenscape.db"
     conexion = Conexion(base_de_datos)
     usuario_obj = conexion.buscar_usuario_por_id(usuario.get('id', None))
     
