@@ -1,0 +1,72 @@
+/* Estilos generales para el fondo animado y modo oscuro */
+body {
+    font-family: Arial, sans-serif;
+    color: #e0e0e0;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: linear-gradient(45deg, #121212, #1a1a1a, #242424, #2b2b2b, #333);
+    background-size: 400% 400%; 
+    animation: gradienteFondo 8s ease infinite; 
+}
+
+@keyframes gradienteFondo {
+    0% {
+        background-position: 0% 50%;
+    }
+    25% {
+        background-position: 50% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    75% {
+        background-position: 50% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+
+/* Contenedor principal del resultado */
+.resultado-container {
+    text-align: center;
+    padding: 30px;
+    background-color: #1e1e1e;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    width: 80%;
+    max-width: 400px;
+}
+
+/* Estilo para el mensaje de éxito */
+.success {
+    color: #28a745; /* Verde para éxito */
+}
+
+/* Estilo para el mensaje de error */
+.error {
+    color: #d9534f; /* Rojo para error */
+}
+
+/* Estilo del botón */
+.volver-btn {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+    transition: background-color 0.3s;
+}
+
+.volver-btn:hover {
+    background-color: #0056b3;
+}

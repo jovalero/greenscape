@@ -1,95 +1,88 @@
-from modelo import Cuidado,Planta,Proyecto,Tarea, Usuario
+from flask import Flask, render_template, request, redirect, url_for,session
 from basededatos.conexion import Conexion
+from modelo.Usuario import Usuario
+from modelo.Proyecto import Proyecto
+from datetime import datetime
 
-base_datos="basededatos/greenscape.db"
-conexion=Conexion(base_datos)
+app = Flask(__name__)
+app.secret_key = 'una_clave_secreta_unica_y_segura'
 
-conexion.crear_base()
-conexion.cerrar_conexion
-jardineros = []
-proyectos = []
-tareas = []
-plantas = []
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    usuario_s = session.get('usuario', {})
+    if usuario_s:
+        tipo_usuario_s = usuario_s.get('tipo_usuario')
+        if tipo_usuario_s == 'Jardinero':
+            return render_template('MenuJardinero.html', usuario=usuario_s)
+        elif tipo_usuario_s == 'Administrador':
+            return render_template('MenuAdmin.html', usuario=usuario_s)
+    
 
-def menu():
-    print("=== Menú de Opciones ===")
-    print("1. Crear Jardinero")
-    print("2. Crear Proyecto de Jardinería")
-    print("3. Crear Tarea")
-    print("4. Crear Planta")
-    print("5. Ver Historial")
-    print("6. Salir")
-    return input("Selecciona una opción: ")
+    base_de_datos = ".venv/basededatos/greenscape.db"
+    conexion = Conexion(base_de_datos)
+    conexion.crear_base()
+    usuarios = conexion.mostrar_usuarios()
 
-def crear_jardinero():
-    id_jardinero = int(input("ID del Jardinero: "))
-    nombre = input("Nombre del Jardinero: ")
-    experiencia = input("Experiencia del Jardinero: ")
-    jardinero = Usuario(id_jardinero, nombre, experiencia)
-    jardineros.append(jardinero)
-    print(f"Jardinero {nombre} creado con éxito.\n")
+    if request.method == 'POST':
+        usuario_form = request.form['username']
+        password_form = request.form['password']
 
+        for usuario in usuarios:
+            id_usuario, nombre, telefono, password, email, tipo_usuario = usuario
+
+            if email == usuario_form and password == password_form:
+                usuario_obj = Usuario(id_usuario, nombre, password, email, tipo_usuario, telefono)
+                session['usuario'] = {'nombre': usuario_obj.nombre, 'id': usuario_obj.id_usuario, 'tipo_usuario': usuario_obj.tipo_usuario}
+
+                # Redirigir al menú adecuado según el tipo de usuario
+                if tipo_usuario == "Jardinero":
+                    conexion.cerrar_conexion()
+                    return render_template('MenuJardinero.html', usuario=usuario_obj)
+                else:
+                    conexion.cerrar_conexion()
+                    return render_template('MenuAdmin.html', usuario=usuario_obj)
+        
+        conexion.cerrar_conexion()
+        return render_template('index.html', mensaje="Credenciales Invalidas")
+
+    return render_template('index.html', mensaje="")
+
+@app.route('/crearproyecto', methods=['GET', 'POST'])
 def crear_proyecto():
-    id_proyecto = int(input("ID del Proyecto: "))
-    nombre = input("Nombre del Proyecto: ")
-    descripcion = input("Descripción del Proyecto: ")
-    proyecto = Proyecto(id_proyecto, nombre, descripcion)
-    proyectos.append(proyecto)
-    print(f"Proyecto {nombre} creado con éxito.\n")
+    usuario = session.get('usuario', {})
+    if not usuario:
+        return redirect(url_for('index'))
 
-def crear_tarea():
-    id_tarea = int(input("ID de la Tarea: "))
-    descripcion = input("Descripción de la Tarea: ")
-    estado = input("Estado de la Tarea (pendiente/en progreso/completada): ")
-    fecha_inicio = input("Fecha de Inicio (YYYY-MM-DD): ")
-    fecha_fin = input("Fecha de Fin (YYYY-MM-DD): ")
-    tarea = Tarea(id_tarea, descripcion, estado, fecha_inicio, fecha_fin)
-    tareas.append(tarea)
-    print(f"Tarea '{descripcion}' creada con éxito.\n")
-
-def crear_planta():
-    id_planta = int(input("ID de la Planta: "))
-    nombre = input("Nombre de la Planta: ")
-    tipo = input("Tipo de Planta: ")
-    planta = Planta(id_planta, nombre, tipo, [])
-    plantas.append(planta)
-    print(f"Planta {nombre} creada con éxito.\n")
-
-def ver_historial():
-    print("\n=== Historial de Entidades ===")
-    print("Jardineros:")
-    for jardinero in jardineros:
-        print(jardinero)
+    base_de_datos = ".venv/basededatos/greenscape.db"
+    conexion = Conexion(base_de_datos)
+    usuario_obj = conexion.buscar_usuario_por_id(usuario.get('id', None))
     
-    print("\nProyectos de Jardinería:")
-    for proyecto in proyectos:
-        print(proyecto)
-    
-    print("\nTareas:")
-    for tarea in tareas:
-        print(tarea)
-    
-    print("\nPlantas:")
-    for planta in plantas:
-        print(planta)
-    print("\n")
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        descripcion = request.form['descripcion']
+        fecha_inicio = datetime.strptime(request.form['fecha_inicio'], '%Y-%m-%d').date()  
+        fecha_final = datetime.strptime(request.form['fecha_final'], '%Y-%m-%d').date()
 
+        nuevo_proyecto = Proyecto(
+            id_proyecto=None, 
+            nombre=nombre,
+            descripcion=descripcion,
+            fecha_inicio=fecha_inicio,
+            fecha_final=fecha_final
+        )
+        
+        resultado = usuario_obj.crear_proyecto(nuevo_proyecto, conexion)
+        session['resultado'] = resultado
+        return redirect(url_for('resultado'))
 
-while True:
-    opcion = menu()
-    
-    if opcion == "1":
-        crear_jardinero()
-    elif opcion == "2":
-        crear_proyecto()
-    elif opcion == "3":
-        crear_tarea()
-    elif opcion == "4":
-        crear_planta()
-    elif opcion == "5":
-        ver_historial()
-    elif opcion == "6":
-        print("Saliendo del programa.")
-        break
-    else:
-        print("Opción no válida, intenta de nuevo.")
+    return render_template('formularioCrearProyecto.html', usuario=usuario_obj)
+
+@app.route('/resultado', methods=['GET', 'POST'])
+def resultado():
+    # Verificar si la sesión existe antes de mostrar el resultado
+    if 'resultado' not in session:
+        return redirect(url_for('index'))  
+
+    resultado = session['resultado']
+    session.pop('resultado', None)  # Limpiar el resultado de la sesión para no mantenerlo
+    return render_template('resultado.html', resultado=resultado)

@@ -1,0 +1,115 @@
+/* Archivo styles.css */
+
+/* Colores para el modo oscuro */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #121212;
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    overflow: hidden;
+    position: relative;
+    background: linear-gradient(45deg, #2a2a2a, #1a1a1a, #121212);
+    background-size: 400% 400%;
+    animation: gradientBG 10s ease infinite;
+}
+
+/* Animación de fondo en modo oscuro */
+@keyframes gradientBG {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+/* Contenedor de login */
+.login-container {
+    width: 90%;
+    max-width: 500px;
+    padding: 20px;
+    background-color: #1e1e1e;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+}
+
+h2 {
+    margin-bottom: 20px;
+    color: #fff;
+    font-size: 28px;
+}
+
+.error-message p {
+    color: #d9534f;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* Estilo de los formularios */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    font-weight: bold;
+    color: #bbb;
+    margin-bottom: 5px;
+}
+
+.form-group input, .form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #444;
+    border-radius: 5px;
+    font-size: 16px;
+    background-color: #2a2a2a;
+    color: #fff;
+    margin-bottom: 10px;
+    box-sizing: border-box;
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+/* Botón */
+.submit-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #5cb85c;
+    color: white;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 20px;
+}
+
+.submit-button:hover {
+    background-color: #4cae4c;
+}
+
+/* Ajustes responsivos */
+@media (max-width: 600px) {
+    .login-container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    .form-group input, .form-group textarea, .submit-button {
+        font-size: 14px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultado de la Transacción</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/resultado.css') }}">
+</head>
+<body>
+    <div class="resultado-container">
+        <h1 class="{{ 'success' if resultado else 'error' }}">
+            {% if resultado %}
+                La transacción se realizó con éxito.
+            {% else %}
+                Hubo un error en la transacción.
+            {% endif %}
+        </h1>
+        <a href="{{ url_for('index') }}">
+            <button class="volver-btn">Volver a la página principal</button>
+        </a>
+    </div>
+</body>
+</html>

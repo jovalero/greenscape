@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menuadmin.css') }}"> 
+</head>
+<body>
+    <div class="menu-container">
+        <h1>Menu de Admin: {{usuario.nombre}}</h1>
+        <a href="/crearproyecto" class="btn-crear-proyecto">Crear Proyecto</a>
+    </div>
+</body>
+</html>
