@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu Admin</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/menuproyectos.css') }}"> 
+</head>
+<body>
+
+    <a href="/" class="btn-cerrar-cesion">Cerrar Sesión</a>
+    
+    <div class="menu-container">
+        <h1>Menu de Proyectos: {{usuario.nombre}}</h1>
+        <a href="/menu_admin" class="btn-crear-proyecto">Crear Proyecto</a>
+        <button class="btn-crear-proyecto" onclick="mostrarTabla()">Mostrar Proyectos</button>
+    </div>
+
+    <div id="tablaProyectos" style="display: none;">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID Proyecto</th>
+                    <th>Nombre</th>
+                    <th>Descripción</th>
+                    <th>Fecha Inicio</th>
+                    <th>Fecha Final</th>
+                    <th>Acciones</th> 
+                </tr>
+            </thead>
+            <tbody>
+                {% for proyecto in proyectos %}
+                <tr>
+                    <td>{{ proyecto.id_proyecto }}</td>
+                    <td>{{ proyecto.nombre }}</td>
+                    <td>{{ proyecto.descripcion }}</td>
+                    <td>{{ proyecto.fecha_inicio }}</td>
+                    <td>{{ proyecto.fecha_final }}</td>
+                    <td>    
+                        <a href="/formularioproyectos?id={{proyecto.id_proyecto}}" class="btn-crear-proyecto">Modificar</a>
+                        <a href="/eliminarproyecto?id={{proyecto.id_proyecto}}" class="btn-cerrar-cesion">Eliminar</a>
+                    </td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="6">No hay proyectos disponibles</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        function mostrarTabla() {
+            var tabla = document.getElementById('tablaProyectos');
+            tabla.style.display = tabla.style.display === 'none' ? 'block' : 'none';
+        }
+    </script>
+
+</body>
+</html>

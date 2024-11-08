@@ -7,9 +7,15 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/menuadmin.css') }}"> 
 </head>
 <body>
+  
+    <a href="/" class="btn-cerrar-cesion">Cerrar Sesión</a>
+
+    
     <div class="menu-container">
         <h1>Menu de Admin: {{usuario.nombre}}</h1>
-        <a href="/crearproyecto" class="btn-crear-proyecto">Crear Proyecto</a>
+        <a href="/menu_admin?menu=proyectos" class="btn-crear-proyecto">Proyectos</a>
+        <a href="/menu_admin?menu=jardineros" class="btn-crear-proyecto">Gestionar Jardineros</a>
     </div>
 </body>
+
 </html>

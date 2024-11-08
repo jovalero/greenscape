@@ -7,18 +7,21 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = 'una_clave_secreta_unica_y_segura'  # Asegúrate de que sea una clave larga y segura
 
-usuarios = {
-    'usuario1': 'password123',
-    'usuario2': 'securepass456'
-}
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
     session.clear()
     return redirect(url_for('index'))
+
 @app.route('/login', methods=['GET', 'POST'])
 def index():
-    
+
+    if 'usuario' in session:
+        if session['usuario']['tipo_usuario'] == "Jardinero":
+            return redirect(url_for('menu_jardinero'))
+        else:
+            return redirect(url_for('menu_admin'))
+        
     base_de_datos = "basededatos/greenscape.db"
     conexion = Conexion(base_de_datos)
     conexion.crear_base()
@@ -34,15 +37,12 @@ def index():
             if email == usuario_form and password == password_form:
                 usuario_obj = Usuario(id_usuario, nombre, password, email, tipo_usuario, telefono)
                 session['usuario'] = {'nombre': usuario_obj.nombre, 'id': usuario_obj.id_usuario, 'tipo_usuario': usuario_obj.tipo_usuario}
-
-                # Redirigir al menú adecuado según el tipo de usuario
                 if tipo_usuario == "Jardinero":
                     conexion.cerrar_conexion()
                     return redirect(url_for('menu_jardinero'))
                 else:
                     conexion.cerrar_conexion()
                     return redirect(url_for('menu_admin'))
-        
         conexion.cerrar_conexion()
         return render_template('index.html', mensaje="Credenciales Invalidas")
 
@@ -50,7 +50,6 @@ def index():
 
 @app.route('/menu_jardinero')
 def menu_jardinero():
-    # Verificar si la sesión está activa antes de mostrar el menú
     if 'usuario' not in session:
         return redirect(url_for('index'))
     usuario = session['usuario']
@@ -58,10 +57,30 @@ def menu_jardinero():
 
 @app.route('/menu_admin')
 def menu_admin():
-    # Verificar si la sesión está activa antes de mostrar el menú
     if 'usuario' not in session:
         return redirect(url_for('index'))
     usuario = session['usuario']
+    menu=request.args.get('menu')
+
+    if menu:
+        if menu=='proyectos':
+            base_de_datos = "basededatos/greenscape.db"
+            conexion = Conexion(base_de_datos)
+            Proyectos=conexion.mostrar_proyectos()
+            proyectos_objetos = []
+            for proyecto in Proyectos:
+                proyecto_objeto = Proyecto(
+                id_proyecto=proyecto[0],
+                nombre=proyecto[1],
+                descripcion=proyecto[2],
+                fecha_inicio=proyecto[3],
+                fecha_final=proyecto[4]) 
+                proyectos_objetos.append(proyecto_objeto)
+                       
+            return render_template('menu_proyectos.html',usuario=usuario, proyectos=proyectos_objetos)
+        elif menu == 'jardineros':
+            return render_template('menu_gestion_jardineros.html',usuario=usuario)
+
     return render_template('MenuAdmin.html', usuario=usuario)
 
 @app.route('/crearproyecto', methods=['GET', 'POST'])
@@ -96,12 +115,12 @@ def crear_proyecto():
 
 @app.route('/resultado', methods=['GET', 'POST'])
 def resultado():
-    # Verificar si la sesión existe antes de mostrar el resultado
+
     if 'resultado' not in session:
         return redirect(url_for('index'))  
 
     resultado = session['resultado']
-    session.pop('resultado', None)  # Limpiar el resultado de la sesión para no mantenerlo
+    session.pop('resultado', None)  
     return render_template('resultado.html', resultado=resultado)
 
 if __name__ == '__main__':
