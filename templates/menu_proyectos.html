@@ -12,7 +12,7 @@
     
     <div class="menu-container">
         <h1>Menu de Proyectos: {{usuario.nombre}}</h1>
-        <a href="/menu_admin" class="btn-crear-proyecto">Crear Proyecto</a>
+        <a href="/formulariosproyectos" class="btn-crear-proyecto">Crear Proyecto</a>
         <button class="btn-crear-proyecto" onclick="mostrarTabla()">Mostrar Proyectos</button>
     </div>
 
@@ -37,8 +37,9 @@
                     <td>{{ proyecto.fecha_inicio }}</td>
                     <td>{{ proyecto.fecha_final }}</td>
                     <td>    
-                        <a href="/formularioproyectos?id={{proyecto.id_proyecto}}" class="btn-crear-proyecto">Modificar</a>
-                        <a href="/eliminarproyecto?id={{proyecto.id_proyecto}}" class="btn-cerrar-cesion">Eliminar</a>
+                        <a href="/formulariosproyectos?id={{proyecto.id_proyecto}}" class="btn-crear-proyecto">Modificar</a>
+                        <a href="/gestionarproyecto?id={{proyecto.id_proyecto}}" class="btn-crear-proyecto">Gestionar</a>
+                        <a href="/eliminarproyecto?id={{proyecto.id_proyecto}}" class="btn-eliminar">Eliminar</a>
                     </td>
                 </tr>
                 {% else %}

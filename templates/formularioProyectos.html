@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ 'Editar Proyecto' if proyecto else 'Crear Proyecto' }}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/formularioCrearrproyecto.css') }}">
+</head>
+<body>
+    <div class="login-container">
+        <h2>{{ 'Editar Proyecto' if proyecto else 'Crear Proyecto' }}</h2>
+
+        <form method="POST" action="/formulariosproyectos">
+            {% if proyecto %}
+                <input type="hidden" name="id_proyecto" value="{{ proyecto._id_proyecto }}">
+            {% endif %}
+
+            <div class="form-group">
+                <label for="nombre">Nombre del Proyecto:</label>
+                <input type="text" id="nombre" name="nombre" value="{{ proyecto._nombre if proyecto else '' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="descripcion">Descripción:</label>
+                <textarea id="descripcion" name="descripcion" rows="4" required>{{ proyecto._descripcion if proyecto else '' }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="fecha_inicio">Fecha de Inicio:</label>
+                <input type="date" id="fecha_inicio" name="fecha_inicio" value="{{ proyecto._fecha_inicio if proyecto else '' }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="fecha_final">Fecha de Finalización:</label>
+                <input type="date" id="fecha_final" name="fecha_final" value="{{ proyecto._fecha_final if proyecto else '' }}" required>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="submit-button">{{ 'Actualizar Proyecto' if proyecto else 'Crear Proyecto' }}</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

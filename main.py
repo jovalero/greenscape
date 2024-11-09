@@ -83,35 +83,67 @@ def menu_admin():
 
     return render_template('MenuAdmin.html', usuario=usuario)
 
-@app.route('/crearproyecto', methods=['GET', 'POST'])
+@app.route('/formulariosproyectos', methods=['GET', 'POST'])
 def crear_proyecto():
+     # Verificación de permisos de usuario
     usuario = session.get('usuario', {})
-    if not usuario:
+    if not usuario or usuario.get('tipo_usuario') != "Admin":
         return redirect(url_for('index'))
 
     base_de_datos = "basededatos/greenscape.db"
     conexion = Conexion(base_de_datos)
     usuario_obj = conexion.buscar_usuario_por_id(usuario.get('id', None))
+
+    proyecto_objeto = None  # Inicializamos la variable para pasarla al formulario
     
+    # Verificar si estamos editando un proyecto existente
+    id_p = request.args.get('id')
+    if id_p:
+        # Cargar proyecto existente en base al ID
+        proyectos = conexion.mostrar_proyectos()
+        for proyecto in proyectos:
+            if proyecto[0] == int(id_p):
+                proyecto_objeto = Proyecto(
+                    id_proyecto=proyecto[0],
+                    nombre=proyecto[1],
+                    descripcion=proyecto[2],
+                    fecha_inicio=proyecto[3],
+                    fecha_final=proyecto[4]
+                )
+                break
+
+   
     if request.method == 'POST':
+        id_proyecto = request.form.get('id_proyecto')
         nombre = request.form['nombre']
         descripcion = request.form['descripcion']
-        fecha_inicio = datetime.strptime(request.form['fecha_inicio'], '%Y-%m-%d').date()  
+        fecha_inicio = datetime.strptime(request.form['fecha_inicio'], '%Y-%m-%d').date()
         fecha_final = datetime.strptime(request.form['fecha_final'], '%Y-%m-%d').date()
 
-        nuevo_proyecto = Proyecto(
-            id_proyecto=None, 
-            nombre=nombre,
-            descripcion=descripcion,
-            fecha_inicio=fecha_inicio,
-            fecha_final=fecha_final
-        )
-        
-        resultado = usuario_obj.crear_proyecto(nuevo_proyecto, conexion)
+        if id_proyecto:
+            proyecto_objeto = Proyecto(
+                id_proyecto=int(id_proyecto),
+                nombre=nombre,
+                descripcion=descripcion,
+                fecha_inicio=fecha_inicio,
+                fecha_final=fecha_final
+            )
+            resultado = usuario_obj.modificar_proyecto(proyecto_objeto, conexion)
+        else:
+            
+            nuevo_proyecto = Proyecto(
+                id_proyecto=None,
+                nombre=nombre,
+                descripcion=descripcion,
+                fecha_inicio=fecha_inicio,
+                fecha_final=fecha_final
+            )
+            resultado = usuario_obj.crear_proyecto(nuevo_proyecto, conexion)
+
         session['resultado'] = resultado
         return redirect(url_for('resultado'))
 
-    return render_template('formularioCrearProyecto.html', usuario=usuario_obj)
+    return render_template('formularioProyectos.html', usuario=usuario_obj, proyecto=proyecto_objeto)
 
 @app.route('/resultado', methods=['GET', 'POST'])
 def resultado():

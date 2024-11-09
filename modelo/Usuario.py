@@ -74,4 +74,19 @@ class Usuario:
                         conexion.insertar_proyecto(proyecto.nombre, proyecto.descripcion, proyecto.fecha_inicio, proyecto.fecha_final)
                         flag = True
         return flag
-        
+    def modificar_proyecto(self, proyecto: Proyecto, conexion: Conexion):
+        flag = False
+        if proyecto is not None:
+            if proyecto.descripcion.strip() and proyecto.nombre.strip():
+                if isinstance(proyecto.fecha_inicio, (datetime, date)) and isinstance(proyecto.fecha_final, (datetime, date)):
+                    if proyecto.fecha_inicio >= datetime.now().date() and proyecto.fecha_inicio <= proyecto.fecha_final:
+                        conexion.editar_proyecto(
+                            proyecto._id_proyecto,
+                            proyecto.nombre,
+                            proyecto.descripcion,
+                            proyecto.fecha_inicio,
+                            proyecto.fecha_final
+                        )
+                        flag = True
+        return flag
+            
