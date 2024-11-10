@@ -145,6 +145,10 @@ def crear_proyecto():
 
     return render_template('formularioProyectos.html', usuario=usuario_obj, proyecto=proyecto_objeto)
 
+@app.route('/eliminarproyecto', methods=['GET', 'POST'])
+def eliminarproyecto():
+    
+
 @app.route('/resultado', methods=['GET', 'POST'])
 def resultado():
 

@@ -39,6 +39,30 @@ class Conexion:
         self.cursor.execute("DELETE FROM proyecto WHERE id_proyecto = ?", (id_proyecto))
         self.conexion.commit()
     
+    def obtener_proyecto_por_id(self, id_proyecto):
+        from modelo.Proyecto import Proyecto  
+
+    
+        self.cursor.execute(
+            "SELECT id_proyecto, nombre, descripcion, fecha_inicio, fecha_final FROM proyecto WHERE id_proyecto = ?",
+            (id_proyecto,)
+        )
+        proyecto_data = self.cursor.fetchone()  
+
+    
+        if proyecto_data:
+            proyecto = Proyecto(
+                id_proyecto=proyecto_data[0],
+                nombre=proyecto_data[1],
+                descripcion=proyecto_data[2],
+                fecha_inicio=proyecto_data[3],
+                fecha_final=proyecto_data[4]
+            )
+            return proyecto
+
+        
+        return None
+    
     ##CRUD PROYECTO
 
     def crear_planta(self):

@@ -13,7 +13,7 @@ class Usuario:
 
     @property
     def telefono(self):
-        return telefono
+        return self._telefono
     
     @telefono.setter
     def telefono(self, telefono):
@@ -76,17 +76,24 @@ class Usuario:
         return flag
     def modificar_proyecto(self, proyecto: Proyecto, conexion: Conexion):
         flag = False
-        if proyecto is not None:
-            if proyecto.descripcion.strip() and proyecto.nombre.strip():
-                if isinstance(proyecto.fecha_inicio, (datetime, date)) and isinstance(proyecto.fecha_final, (datetime, date)):
-                    if proyecto.fecha_inicio >= datetime.now().date() and proyecto.fecha_inicio <= proyecto.fecha_final:
-                        conexion.editar_proyecto(
-                            proyecto._id_proyecto,
-                            proyecto.nombre,
-                            proyecto.descripcion,
-                            proyecto.fecha_inicio,
-                            proyecto.fecha_final
-                        )
-                        flag = True
+        if proyecto is not None and proyecto._id_proyecto is not None:
+            proyecto_actual = conexion.obtener_proyecto_por_id(proyecto._id_proyecto)
+            if proyecto_actual:
+                fecha_inicio_actual = proyecto_actual.fecha_inicio
+                fecha_final_actual = proyecto_actual.fecha_final
+                if proyecto.descripcion.strip() and proyecto.nombre.strip():
+                    if isinstance(proyecto.fecha_inicio, (datetime, date)) and isinstance(proyecto.fecha_final, (datetime, date)):
+                        if proyecto.fecha_inicio <= proyecto.fecha_final:
+                            if proyecto.fecha_inicio >= fecha_inicio_actual and proyecto.fecha_final >= fecha_final_actual:
+                                
+                                conexion.editar_proyecto(
+                                    proyecto._id_proyecto,
+                                    proyecto.nombre,
+                                    proyecto.descripcion,
+                                    proyecto.fecha_inicio, 
+                                    proyecto.fecha_final
+                                )
+                                flag = True
         return flag
+
             
