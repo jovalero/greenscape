@@ -81,6 +81,8 @@ class Usuario:
             if proyecto_actual:
                 fecha_inicio_actual = proyecto_actual.fecha_inicio
                 fecha_final_actual = proyecto_actual.fecha_final
+                fecha_inicio_actual = datetime.strptime(fecha_inicio_actual, "%Y-%m-%d").date()
+                fecha_final_actual = datetime.strptime(fecha_final_actual, "%Y-%m-%d").date()
                 if proyecto.descripcion.strip() and proyecto.nombre.strip():
                     if isinstance(proyecto.fecha_inicio, (datetime, date)) and isinstance(proyecto.fecha_final, (datetime, date)):
                         if proyecto.fecha_inicio <= proyecto.fecha_final:
