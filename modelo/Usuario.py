@@ -95,5 +95,14 @@ class Usuario:
                                 )
                                 flag = True
         return flag
+    def eliminar_proyecto(self, id_proyecto: int, conexion: Conexion):
+        flag = False
+        if id_proyecto is not None:
+            proyecto_actual = conexion.obtener_proyecto_por_id(id_proyecto)
+            if proyecto_actual:
+                conexion.eliminar_proyecto(id_proyecto)
+                flag = True
+        return flag  
+    
 
             

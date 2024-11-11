@@ -147,7 +147,19 @@ def crear_proyecto():
 
 @app.route('/eliminarproyecto', methods=['GET', 'POST'])
 def eliminarproyecto():
-    
+    usuario=session.get('usuario',{})
+    if not 'usuario' in session:
+        return redirect(url_for('index'))
+    base_de_datos = "basededatos/greenscape.db"
+    conexion = Conexion(base_de_datos)
+    usuario_obj = conexion.buscar_usuario_por_id(usuario.get('id', None))
+    id_p=request.args.get('id')
+    if id_p:
+        resultado=usuario_obj.eliminar_proyecto(int(id_p), conexion)
+        session['resultado']=resultado
+        return redirect(url_for('resultado'))
+
+
 
 @app.route('/resultado', methods=['GET', 'POST'])
 def resultado():

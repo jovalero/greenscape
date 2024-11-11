@@ -34,9 +34,9 @@ class Conexion:
 
         return proyectos
     
-    def eliminar_proyecto(self, id_proyecto):
+    def eliminar_proyecto(self, id_proyecto : int):
 
-        self.cursor.execute("DELETE FROM proyecto WHERE id_proyecto = ?", (id_proyecto))
+        self.cursor.execute("DELETE FROM proyecto WHERE id_proyecto = ?", (id_proyecto,))
         self.conexion.commit()
     
     def obtener_proyecto_por_id(self, id_proyecto):
